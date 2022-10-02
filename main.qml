@@ -26,6 +26,8 @@ Window {
         }
 
         function onSignalDownload(boolValue){
+            downloadButton.enabled = true
+            text3.visible = false
             return
         }
     }
@@ -114,9 +116,22 @@ Window {
             Layout.preferredWidth: 217
 
             onClicked: {
+                text3.visible = true
+                downloadButton.enabled = false
                 backend.getUrl(textField.text)
                 backend.download(comboBox.currentText)
             }
+        }
+
+        Text {
+            id: text3
+            color: "#c7f5db"
+            text: qsTr("DESCARGANDO...")
+            visible: false
+            font.pixelSize: 19
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.preferredHeight: 29
+            Layout.preferredWidth: 157
         }
 
 

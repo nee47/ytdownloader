@@ -1,5 +1,6 @@
 # This Python file uses the following encoding: utf-8
 import sys
+import threading
 from pathlib import Path
 from download_url import EasyDownloader
 
@@ -31,15 +32,18 @@ class DownloaderBackend(QObject):
         self.signalGetUrlPath.emit(True)
         self.downloader.setUrl(urlPath)
         
-
     signalDownload = Signal(bool)
+    def _downloadLogic(self, index):
+        self.downloader.setRes(index)
+        self.downloader.download()
+        self.signalDownload.emit(True)
 
     @Slot(str)
     def download(self, index):
-        self.signalGetUrlPath.emit(True)
-        self.downloader.setRes(index)
-        self.downloader.download()
-        print("Descargando, el es index:")
+        d = threading.Thread(target=self._downloadLogic, args=(index,))
+        d.start()
+        
+        
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
