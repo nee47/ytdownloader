@@ -39,6 +39,8 @@ ffmpeg
 # qtcreator generated files
 *.pro.user*
 
+*.pyproject.user*
+
 # xemacs temporary files
 *.flc
 
