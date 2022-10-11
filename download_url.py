@@ -14,12 +14,8 @@ class EasyDownloader():
 			self.url = None
 
 	def setRes(self, res):
-		if res== "720p":
-			self.res = '-S "res:'+"720"+'"'
-		if res== "1080p":
-			self.res = '-S "res:'+"1080"+'"'
-		if res== "2k":
-			self.res = '-S "res:'+"1440"+'"'
+		r = int(res[:-1])
+		self. res = f'-S "res:{r},codec:vp9"' 
 
 	def setTargetPath(self, path):
 		self.target_path = "-P "+ path
