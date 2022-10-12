@@ -21,7 +21,6 @@ class DownloaderBackend(QObject):
         self.signalGetPath.emit(True)
         path = targetPath[8:]
         self.downloader.setTargetPath(path)
-        print("PATH SETEADO PA")
 
     signalGetUrlPath = Signal(bool)
 

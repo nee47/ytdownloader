@@ -1,6 +1,3 @@
-from tkinter.filedialog import*
-import tkinter
-from tkinter import*
 import os
 
 class EasyDownloader():
@@ -51,9 +48,3 @@ class EasyDownloader():
 		os.system(tmp)
 		os.remove(tmp)
 
-if __name__ == '__main__':
-
-	tkinter.Tk().withdraw()
-	url = tkinter.simpledialog.askstring(title="downloader", prompt="--------enter your url pls-------")
-	d = EasyDownloader()
-	d.download(url)
