@@ -61,6 +61,7 @@ Window {
             placeholderTextColor: "#808080"
             color: "white"
             horizontalAlignment: "AlignHCenter"
+            selectByMouse: true
             Layout.fillHeight: false
             Layout.preferredHeight: 44
             Layout.preferredWidth: 400

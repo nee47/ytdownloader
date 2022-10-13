@@ -15,13 +15,13 @@ class EasyDownloader():
 		self. res = f'-S "res:{r},codec:vp9"' 
 
 	def setTargetPath(self, path):
-		self.target_path = "-P "+ path
+		self.target_path = f"-P {path}"
 
-	def setEnconderPath(self, path):
-		self.ffmpeg_path = "--ffmpeg-location "+path
+	def setEnconderPath(self, enconderPath):
+		self.ffmpeg_path = f"--ffmpeg-location {enconderPath}"
 
 	def setExtension(self, ext):
-		self.ext = "--remux-video "+ext
+		self.ext = f"--remux-video {ext}"
 
 	def setUrl(self, url):
 		self.url = url

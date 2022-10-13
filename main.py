@@ -26,8 +26,6 @@ class DownloaderBackend(QObject):
 
     @Slot(str)
     def getUrl(self, urlPath):
-        print("CALIDAD SETEADA PA")
-        print("toma tu link "+urlPath)
         self.signalGetUrlPath.emit(True)
         self.downloader.setUrl(urlPath)
         
