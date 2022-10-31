@@ -11,7 +11,7 @@ class EasyDownloader():
 			self.url = None
 
 	def setRes(self, res):
-		r = int(res[:-1])
+		r = int(res[:-1]) if res != "2k" else 2048
 		self. res = f'-S "res:{r},codec:vp9"' 
 
 	def setTargetPath(self, path):

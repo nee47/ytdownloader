@@ -38,9 +38,7 @@ class DownloaderBackend(QObject):
     @Slot(str)
     def download(self, index):
         d = threading.Thread(target=self._downloadLogic, args=(index,))
-        d.start()
-        
-        
+        d.start()    
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)

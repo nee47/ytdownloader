@@ -11,7 +11,7 @@ Window {
     height: 480
     visible: true
     color: "#1f2126"
-    title: qsTr("Hello World")
+    title: qsTr("YT DOWNLOADER")
     Material.theme: Material.Dark
     Material.accent: Material.Orange
 
