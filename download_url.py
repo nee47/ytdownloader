@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 class EasyDownloader():
 
@@ -42,9 +43,13 @@ class EasyDownloader():
 		command = ' '.join(container)
 		tmp = "tmp.cmd"
 		
-		with open(tmp, "w") as f:
-			f.write(command)
+		#with open(tmp, "w") as f:
+		#	f.write(command)
 		
-		os.system(tmp)
-		os.remove(tmp)
+		#os.system(tmp)
+		#os.remove(tmp)
 
+		process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+		while process.poll() is None:
+			print(f'MY THING: {process.stdout.readline()}')
