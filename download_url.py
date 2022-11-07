@@ -48,14 +48,16 @@ class EasyDownloader():
 		#os.system(tmp)
 		#os.remove(tmp)
 
-		process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+		process = subprocess.Popen(command, 
+						stdout=subprocess.PIPE, 
+						stderr=subprocess.STDOUT, 
+						text=True)
 		previous = 0
 		while process.poll() is None:
 			x = re.search(r"\[download\]\s+(\d{1,3}.\d+%)", process.stdout.readline())
 			if x:
 				current = x.groups()[0][:-1]
 				current_numb = round(float(current))
-				#previous = current_numb
 				if(current_numb != previous):
 					currentProgressF(current_numb)
 					previous = current_numb

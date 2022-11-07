@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-import sys
+import sys, re
 import threading
 from pathlib import Path
 from download_url import EasyDownloader
@@ -29,12 +29,19 @@ class DownloaderBackend(QObject):
         self.downloader.download(url, currentProgressF)
         self.signalDownload.emit(True)
 
-    def verify_url()
+    def validate_url(self, url):
+        result = re.search(r"youtu.?be(.com)?/\w+", url)
+        return True if result else False
 
+
+    signalErrorOcurred = Signal(str)
     @Slot(str, str)
     def download(self, resolution, url):
-        d = threading.Thread(target=self._downloadLogic, args=(resolution, url, self.signalCurrentProgress.emit))
-        d.start()    
+        if(self.validate_url(url)):    
+            d = threading.Thread(target=self._downloadLogic, args=(resolution, url, self.signalCurrentProgress.emit))
+            d.start()
+        else:
+            self.signalErrorOcurred.emit("invalid youtube link ")
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)

@@ -17,15 +17,9 @@ Window {
 
     Connections{
         target: backend
-        function onSignalGetPath(boolValue){
-            return
-        }
-
 
         function onSignalDownload(boolValue){
-            downloadButton.enabled = true
-            progressBar.visible = false
-            progressBar.value = 0
+            window.disableDownloadState()
             return
         }
 
@@ -33,6 +27,34 @@ Window {
             progressBar.value = current_numb
             return
         }
+
+        function onSignalErrorOcurred(message){
+            window.disableDownloadState()
+            errorDialog.errorMessage = message
+            errorDialog.open()
+        }
+
+    }
+
+    function disableDownloadState(){
+        downloadButton.enabled = true
+        progressBar.disableView()
+    }
+
+    Dialog {
+        id: errorDialog
+        modal: true
+        title: qsTr("Error")
+        width: 200
+        anchors.centerIn: parent
+        property string errorMessage
+        Text {
+            id: errorName
+            anchors.centerIn: parent
+            text: errorDialog.errorMessage
+            color: "#FFCC66"
+        }
+        standardButtons: Dialog.Ok
     }
 
     ColumnLayout {
@@ -133,6 +155,16 @@ Window {
             value: 0
             Layout.preferredHeight: 20
             Layout.fillWidth: true
+            function enableView(){
+                progressBar.visible = true
+
+            }
+
+            function disableView(){
+                progressBar.visible = false
+                progressBar.value = 0
+            }
+
         }
 
     }
