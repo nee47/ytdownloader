@@ -21,13 +21,16 @@ Window {
             return
         }
 
-        function onSignalGetUrlPath(boolValue){
-            return
-        }
 
         function onSignalDownload(boolValue){
             downloadButton.enabled = true
-            text3.visible = false
+            progressBar.visible = false
+            progressBar.value = 0
+            return
+        }
+
+        function onSignalCurrentProgress(current_numb){
+            progressBar.value = current_numb
             return
         }
     }
@@ -106,7 +109,6 @@ Window {
                 }
             }
 
-
         }
 
         Button {
@@ -117,26 +119,21 @@ Window {
             Layout.preferredWidth: 217
 
             onClicked: {
-                text3.visible = true
+                progressBar.visible = true
                 downloadButton.enabled = false
-                backend.getUrl(textField.text)
-                backend.download(comboBox.currentText)
+                backend.download(comboBox.currentText, textField.text)
             }
         }
 
-        Text {
-            id: text3
-            color: "#c7f5db"
-            text: qsTr("DESCARGANDO...")
+        ProgressBar{
+            id: progressBar
+            from: 0
+            to: 100
             visible: false
-            font.pixelSize: 19
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Layout.preferredHeight: 29
-            Layout.preferredWidth: 157
+            value: 0
+            Layout.preferredHeight: 20
+            Layout.fillWidth: true
         }
-
-
-
 
     }
 }

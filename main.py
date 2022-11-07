@@ -21,23 +21,19 @@ class DownloaderBackend(QObject):
         self.signalGetPath.emit(True)
         path = targetPath[8:]
         self.downloader.setTargetPath(path)
-
-    signalGetUrlPath = Signal(bool)
-
-    @Slot(str)
-    def getUrl(self, urlPath):
-        self.signalGetUrlPath.emit(True)
-        self.downloader.setUrl(urlPath)
-        
+     
     signalDownload = Signal(bool)
-    def _downloadLogic(self, index):
-        self.downloader.setRes(index)
-        self.downloader.download()
+    signalCurrentProgress = Signal(int)
+    def _downloadLogic(self, resolution, url, currentProgressF):
+        self.downloader.setRes(resolution)
+        self.downloader.download(url, currentProgressF)
         self.signalDownload.emit(True)
 
-    @Slot(str)
-    def download(self, index):
-        d = threading.Thread(target=self._downloadLogic, args=(index,))
+    def verify_url()
+
+    @Slot(str, str)
+    def download(self, resolution, url):
+        d = threading.Thread(target=self._downloadLogic, args=(resolution, url, self.signalCurrentProgress.emit))
         d.start()    
 
 if __name__ == "__main__":
