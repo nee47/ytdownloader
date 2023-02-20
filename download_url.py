@@ -50,11 +50,14 @@ class EasyDownloader():
 
 		process = subprocess.Popen(command, 
 						stdout=subprocess.PIPE, 
-						stderr=subprocess.STDOUT, 
+						stderr=subprocess.STDOUT,
+						creationflags=subprocess.CREATE_NO_WINDOW,
 						text=True)
 		previous = 0
 		while process.poll() is None:
-			x = re.search(r"\[download\]\s+(\d{1,3}.\d+%)", process.stdout.readline())
+			line = process.stdout.readline()
+			print(line)
+			x = re.search(r"\[download\]\s+(\d{1,3}.\d+%)", line)
 			if x:
 				current = x.groups()[0][:-1]
 				current_numb = round(float(current))

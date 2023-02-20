@@ -1,4 +1,3 @@
-import QtQuick 2.9
 import QtQuick.Window
 import QtQuick.Controls.Material 2.3
 import QtQuick.Controls 6.3
