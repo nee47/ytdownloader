@@ -1,76 +1,22 @@
-import QtQuick.Window
-import QtQuick.Controls.Material 2.3
-import QtQuick.Controls 6.3
-import QtQuick.Layouts 6.3
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 import QtQuick.Dialogs
 
-Window {
-    id: window
-    width: 640
-    height: 480
-    visible: true
-    color: "#1f2126"
-    title: qsTr("YT DOWNLOADER")
-    Material.theme: Material.Dark
-    Material.accent: Material.Orange
-
-    Connections{
-        target: backend
-
-        function onSignalDownload(boolValue){
-            window.disableDownloadState()
-            return
-        }
-
-        function onSignalCurrentProgress(current_numb){
-            progressBar.value = current_numb
-            return
-        }
-
-        function onSignalErrorOcurred(message){
-            window.disableDownloadState()
-            errorDialog.errorMessage = message
-            errorDialog.open()
-        }
-
-    }
-
-    function disableDownloadState(){
-        downloadButton.enabled = true
-        progressBar.disableView()
-    }
-
-    Dialog {
-        id: errorDialog
-        modal: true
-        title: qsTr("Error")
-        width: 200
-        anchors.centerIn: parent
-        property string errorMessage
-        Text {
-            id: errorName
-            anchors.centerIn: parent
-            text: errorDialog.errorMessage
-            color: "#FFCC66"
-        }
-        standardButtons: Dialog.Ok
-    }
+Page{
+    id: page
 
     ColumnLayout {
         id: columnLayout
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.topMargin: 124
-        anchors.bottomMargin: 113
-        anchors.rightMargin: 56
-        anchors.leftMargin: 82
-        spacing: 15
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+
+
+        spacing: 17
 
         Text {
             id: text1
-            text: qsTr("INGRESA EL LINK")
+            text: qsTr("LINK")
             font.pixelSize: 17
             horizontalAlignment: Text.AlignHCenter
             Layout.rowSpan: 1
@@ -148,9 +94,32 @@ Window {
 
         }
 
+        Rectangle{
+            border.color: "#eb4465"
+            color: "transparent"
+            Layout.preferredHeight: 120
+            Layout.preferredWidth: 300
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            radius: 3
+
+            Text {
+                id: infoText
+                font.pixelSize: 12
+                horizontalAlignment: Text.AlignHCenter
+                anchors.fill: parent
+                Layout.rowSpan: 1
+                color: "#fff"
+                wrapMode: Text.Wrap
+
+            }
+            visible: false
+
+        }
+
         Button {
             id: downloadButton
             text: qsTr("Descargar")
+            Layout.fillWidth: false
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Layout.preferredHeight: 54
             Layout.preferredWidth: 217
@@ -162,27 +131,32 @@ Window {
             }
         }
 
-        ProgressBar{
-            id: progressBar
-            from: 0
-            to: 100
-            visible: false
-            value: 0
-            Layout.preferredHeight: 20
-            Layout.fillWidth: true
-            function enableView(){
-                progressBar.visible = true
+    }
 
-            }
+    ProgressBar{
+        id: progressBar
+        from: 0
+        to: 100
+        visible: false
+        value: 0
+        anchors.top: columnLayout.bottom
+        anchors.topMargin: 12
+        anchors.horizontalCenter: parent.horizontalCenter
+        function enableView(){
+            progressBar.visible = true
 
-            function disableView(){
-                progressBar.visible = false
-                progressBar.value = 0
-            }
+        }
 
+        function disableView(){
+            progressBar.visible = false
+            progressBar.value = 0
         }
 
     }
 }
 
-
+/*##^##
+Designer {
+    D{i:0;autoSize:true;height:480;width:640}
+}
+##^##*/

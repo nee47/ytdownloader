@@ -1,4 +1,3 @@
-# This Python file uses the following encoding: utf-8
 import sys, re
 import threading
 from pathlib import Path
@@ -42,13 +41,19 @@ class DownloaderBackend(QObject):
             d.start()
         else:
             self.signalErrorOcurred.emit("invalid youtube link ")
+    
+    @Slot()
+    def update(self):    
+        d = threading.Thread(target=self.downloader.update_ytdlp)
+        d.start()
+        
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
     thebackend = DownloaderBackend()
     engine.rootContext().setContextProperty("backend", thebackend)
-    qml_file = Path(__file__).resolve().parent / "main.qml"
+    qml_file = Path(__file__).resolve().parent / "qml/main.qml"
     engine.load(qml_file)
     if not engine.rootObjects():
         sys.exit(-1)

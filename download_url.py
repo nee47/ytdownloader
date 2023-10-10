@@ -14,7 +14,7 @@ class EasyDownloader():
 
 	def setRes(self, res):
 		r = int(res[:-1]) if res != "2k" else 2048
-		self. res = f'-S "res:{r},codec:vp9"' 
+		self. res = f'-S "res:{r}"' 
 
 	def setTargetPath(self, path):
 		self.target_path = f"-P {path}"
@@ -42,12 +42,7 @@ class EasyDownloader():
 
 		container = [self.ytdlp, self.res, self.target_path, self.ffmpeg_path, self.ext, url]
 		command = ' '.join(container)
-		#tmp = "tmp.cmd"	
-		#with open(tmp, "w") as f:
-		#	f.write(command)
-		#os.system(tmp)
-		#os.remove(tmp)
-
+		
 		process = subprocess.Popen(command, 
 						stdout=subprocess.PIPE, 
 						stderr=subprocess.STDOUT,
@@ -66,3 +61,17 @@ class EasyDownloader():
 					previous = current_numb
 
 		process.stdout.close()
+	
+	def update_ytdlp(self):
+		lines = []
+		command = self.ytdlp+" -U"
+		process = subprocess.Popen(command, 
+				stdout=subprocess.PIPE, 
+				stderr=subprocess.STDOUT,
+				text=True)
+		while process.poll() is None:
+			line = process.stdout.readline()
+			if line != '' :
+				lines.append(line)
+		
+		return lines
