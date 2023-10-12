@@ -1,11 +1,16 @@
 
 # YTdownloader
 
-Download videos in a simple way with a intuitive minimalistic gui.
+Download Youtube videos and audios in a simple way with an intuitive minimalistic gui.
 
+
+
+![Logo](https://raw.githubusercontent.com/nee47/ytdownloader/master/ytdownloader.jpg)
 
 
 ## Installation
+
+Python required < 3.10 (doesnt work with 3.10 and above)
 
 Create a virtual env (i did it with virtualenv)
 
@@ -17,15 +22,19 @@ Create a virtual env (i did it with virtualenv)
   cd env/scripts
   activate
 ```
-Install pyside6 and Yt-dlp modules
+Pyside6 and Yt-dlp modules are required, they will get installed with:
+
 ```bash
-  pip install pyside6 
-```
-```bash
-  pip install yt-dlp 
+  pip install -r requirements.txt 
 ```
 
+In order to edit the gui, [QtCreator](https://www.qt.io/download-open-source)  is recommended, you should install Qt and QtCreator comes as a feature
+If downloading Qt is too slow try this [fix](https://www.youtube.com/watch?v=F0BwCNKAx80)
 
-## Requisites for post processing
 
-You need to download FFMPEG binaries and put the folder in the main directory of the project, then you should name it 'ffmpeg'.
+## Usage
+
+```
+python main.py
+```
+

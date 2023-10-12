@@ -8,23 +8,16 @@ class EasyDownloader():
 	def __init__(self):
 			self.ytdlp = "yt-dlp --newline "
 			self.opts = {'res': '', 'output_path': '', 'ffmpeg_path':'', 'ext':''}
-			self.res = None
-			self.target_path = None
-			self.ffmpeg_path = ""
-			self.ext = ""
 			self.url = None
 
 	def set_res(self, res):
 		r = int(res[:-1]) if res != "2k" else 2048
 		self.opts['res'] = f'res:{r}'
-		#self.res = f'res:{r}'
 
 	def set_output_path(self, path):
-		#self.target_path = path
 		self.opts['output_path'] = path
 
 	def set_ffmpeg_path(self, path):
-		#self.ffmpeg_path = enconderPath
 		self.opts['ffmpeg_path'] = path
 
 	def set_extension(self, ext):
@@ -35,14 +28,14 @@ class EasyDownloader():
 	
 	def download(self, url, currentProgressF=None):
 		
-		if not url or not self.target_path:
+		if not url:
 			print("ERROR, NO LINK")
 			return
 		
 		ffmpeg = r"\ffmpeg\bin"
 		f = fr"{os.getcwd()}{ffmpeg}"
-		self.setEnconderPath(f)	
-		self.setExtension("mp4")
+		self.opts['ffmpeg_path'] = f
+		self.opts['ext'] = "mp4"
 
 		class MyLogger:
 			def debug(self, msg):
@@ -76,10 +69,10 @@ class EasyDownloader():
 		ydl_opts = {
 			'logger': MyLogger(),
 			'progress_hooks': [my_hook],
-			'ffmpeg_location': self.ffmpeg_path,
-			'format_sort': [self.res],
-			'paths': {'home': self.target_path},
-			'postprocessors': [{'key': 'FFmpegVideoRemuxer', 'preferedformat': self.ext}]
+			'ffmpeg_location': self.opts.get('ffmpeg_path'),
+			'format_sort': [self.opts.get('res')],
+			'paths': {'home': self.opts['output_path']},
+			'postprocessors': [{'key': 'FFmpegVideoRemuxer', 'preferedformat': self.opts['ext']}]
 		}
 
 		with yt_dlp.YoutubeDL(ydl_opts) as ydl:
