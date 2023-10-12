@@ -19,14 +19,14 @@ class DownloaderBackend(QObject):
     def getFolderPath(self, targetPath):
         self.signalGetPath.emit(True)
         path = targetPath[8:]
-        self.downloader.setTargetPath(path)
+        self.downloader.set_output_path(path)
      
-    signalDownload = Signal(bool)
-    signalCurrentProgress = Signal(int)
+    signalDownloadFinished = Signal(bool)
+    signalCurrentProgress = Signal(int, str)
     def _downloadLogic(self, resolution, url, currentProgressF):
-        self.downloader.setRes(resolution)
+        self.downloader.set_res(resolution)
         self.downloader.download(url, currentProgressF)
-        self.signalDownload.emit(True)
+        self.signalDownloadFinished.emit(True)
 
     def validate_url(self, url):
         result = re.search(r"youtu.?be(.com)?/\w+", url)

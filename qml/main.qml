@@ -18,29 +18,14 @@ Window {
     Connections{
         target: backend
 
-        function onSignalDownload(boolValue){
-            window.disableDownloadState()
-            return
-        }
-
-        function onSignalCurrentProgress(current_numb){
-            progressBar.value = current_numb
-            return
-        }
 
         function onSignalErrorOcurred(message){
-            window.disableDownloadState()
+            //window.disableDownloadState()
             errorDialog.errorMessage = message
             errorDialog.open()
         }
 
     }
-
-    function disableDownloadState(){
-        downloadButton.enabled = true
-        progressBar.disableView()
-    }
-
 
     MenuBar {
         id: menuBar

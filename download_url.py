@@ -1,67 +1,91 @@
 import os
 import subprocess
 import re
+import yt_dlp
 
 class EasyDownloader():
 
 	def __init__(self):
 			self.ytdlp = "yt-dlp --newline "
+			self.opts = {'res': '', 'output_path': '', 'ffmpeg_path':'', 'ext':''}
 			self.res = None
 			self.target_path = None
 			self.ffmpeg_path = ""
 			self.ext = ""
 			self.url = None
 
-	def setRes(self, res):
+	def set_res(self, res):
 		r = int(res[:-1]) if res != "2k" else 2048
-		self. res = f'-S "res:{r}"' 
+		self.opts['res'] = f'res:{r}'
+		#self.res = f'res:{r}'
 
-	def setTargetPath(self, path):
-		self.target_path = f"-P {path}"
+	def set_output_path(self, path):
+		#self.target_path = path
+		self.opts['output_path'] = path
 
-	def setEnconderPath(self, enconderPath):
-		self.ffmpeg_path = f"--ffmpeg-location {enconderPath}"
+	def set_ffmpeg_path(self, path):
+		#self.ffmpeg_path = enconderPath
+		self.opts['ffmpeg_path'] = path
 
-	def setExtension(self, ext):
-		self.ext = f"--remux-video {ext}"
+	def set_extension(self, ext):
+		self.ext = ext
 
-	def setUrl(self, url):
+	def set_url(self, url):
 		self.url = url
-
-	def download(self, url, currentProgressF):
-
+	
+	def download(self, url, currentProgressF=None):
+		
 		if not url or not self.target_path:
 			print("ERROR, NO LINK")
 			return
 		
 		ffmpeg = r"\ffmpeg\bin"
-		f = f'"{os.getcwd()}{ffmpeg}"'
-		print(f)
+		f = fr"{os.getcwd()}{ffmpeg}"
 		self.setEnconderPath(f)	
 		self.setExtension("mp4")
 
-		container = [self.ytdlp, self.res, self.target_path, self.ffmpeg_path, self.ext, url]
-		command = ' '.join(container)
-		
-		process = subprocess.Popen(command, 
-						stdout=subprocess.PIPE, 
-						stderr=subprocess.STDOUT,
-						creationflags=subprocess.CREATE_NO_WINDOW,
-						text=True)
-		previous = 0
-		while process.poll() is None:
-			line = process.stdout.readline()
-			print(line)
-			x = re.search(r"\[download\]\s+(\d{1,3}.\d+%)", line)
-			if x:
-				current = x.groups()[0][:-1]
-				current_numb = round(float(current))
-				if(current_numb != previous):
-					currentProgressF(current_numb)
-					previous = current_numb
+		class MyLogger:
+			def debug(self, msg):
+				# For compatibility with youtube-dl, both debug and info are passed into debug
+				# You can distinguish them by the prefix '[debug] '
+				if msg.startswith('[debug] '):
+					pass
+				else:
+					#self.info(msg)
+					pass
 
-		process.stdout.close()
-	
+
+			def info(self, msg):
+				print(msg)
+
+			def warning(self, msg):
+				print(msg)
+
+			def error(self, msg):
+				print(msg)
+
+		def my_hook(d):
+			if d['status'] == 'finished':
+				print('Done downloading, now post-processing ...')
+			elif d['status'] == 'downloading':
+				if d.get('speed') and d.get("eta") and d.get('elapsed'):
+					speed_Mbps = round(d['speed'] * 0.000001)
+					speed = f"elapsed time: {round(d['elapsed'])}s    estimated time: {round(d['eta'])}s   speed: {speed_Mbps} Mb/s"
+					currentProgressF(d['downloaded_bytes']/d['total_bytes'] * 100, speed)
+
+		ydl_opts = {
+			'logger': MyLogger(),
+			'progress_hooks': [my_hook],
+			'ffmpeg_location': self.ffmpeg_path,
+			'format_sort': [self.res],
+			'paths': {'home': self.target_path},
+			'postprocessors': [{'key': 'FFmpegVideoRemuxer', 'preferedformat': self.ext}]
+		}
+
+		with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+			ydl.download(url)
+		
+	# Needs rework, using ytdlp module now
 	def update_ytdlp(self):
 		lines = []
 		command = self.ytdlp+" -U"

@@ -43,12 +43,8 @@ Page{
         }
 
 
-        Button{
-            text: qsTr("Descargar")
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Layout.preferredHeight: 54
-            Layout.preferredWidth: 217
+        DownloadButton{
+            text: qsTr("Download")
         }
 
     }

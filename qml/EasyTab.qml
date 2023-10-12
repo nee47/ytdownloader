@@ -6,11 +6,52 @@ import QtQuick.Dialogs
 Page{
     id: page
 
+    Connections{
+        target: backend
+
+        function onSignalDownloadFinished(boolValue){
+            resetComponents()
+            GlobalVars.downloadStatus = "finished"
+            return
+        }
+
+        // emited signal after pressing DOWNLOAD while downloading
+        function onSignalCurrentProgress(current_numb, speed){
+            progressBar.value = current_numb
+            speedLabel.text = speed
+            return
+        }
+
+        // emited signal after pressing DOWNLOAD if something failed
+        function onSignalErrorOcurred(message){
+            resetComponents()
+            GlobalVars.downloadStatus = "error"
+            errorDialog.errorMessage = message
+            errorDialog.open()
+        }
+
+    }
+
+    function resetComponents(){
+        downloadButton.enabled = true
+        progressContainer.resetProgressContainer()
+        return
+    }
+
+
     ColumnLayout {
         id: columnLayout
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
 
+        property string quality: comboBox.currentText
+        property string outputPath: openFile.currentFolder
+        property string ytUrl: textField.text
+
+        function downloadH(){
+            progressContainer.visible = true
+            backend.download(quality, ytUrl)
+        }
 
         spacing: 17
 
@@ -25,6 +66,7 @@ Page{
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             color: "#eb4465"
         }
+
         TextField{
             id: textField
             Menu {
@@ -32,13 +74,12 @@ Page{
                 Action {
                     text: "pegar"
                     onTriggered: {
-                        console.log("PEGADO")
                         textField.paste()
                     }
                 }
             }
 
-            placeholderText: qsTr("ejemplo: https://youtube.com")
+            placeholderText: qsTr("https://youtube.com")
             placeholderTextColor: "#808080"
             color: "white"
             horizontalAlignment: "AlignHCenter"
@@ -77,7 +118,7 @@ Page{
             }
             Button {
                 id: buttonTargetPath
-                text: qsTr("Carpeta Destino")
+                text: qsTr("Output Path")
                 Layout.preferredWidth: 143
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 Layout.preferredHeight: 47
@@ -94,62 +135,61 @@ Page{
 
         }
 
-        Rectangle{
-            border.color: "#eb4465"
-            color: "transparent"
-            Layout.preferredHeight: 120
-            Layout.preferredWidth: 300
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            radius: 3
+        DownloadButton {
+            id: downloadButton
+            downloadHandler: columnLayout.downloadH
+        }
 
-            Text {
-                id: infoText
-                font.pixelSize: 12
-                horizontalAlignment: Text.AlignHCenter
-                anchors.fill: parent
-                Layout.rowSpan: 1
-                color: "#fff"
-                wrapMode: Text.Wrap
+        Button{
+            id: testButton
+            text: qsTr("testo")
+            Layout.preferredHeight: 54
+            Layout.preferredWidth: 217
+            onClicked: {
+                console.log(GlobalVars.textoField)
 
             }
             visible: false
 
         }
 
-        Button {
-            id: downloadButton
-            text: qsTr("Descargar")
-            Layout.fillWidth: false
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Layout.preferredHeight: 54
-            Layout.preferredWidth: 217
-
-            onClicked: {
-                progressBar.visible = true
-                downloadButton.enabled = false
-                backend.download(comboBox.currentText, textField.text)
-            }
-        }
-
     }
 
-    ProgressBar{
-        id: progressBar
-        from: 0
-        to: 100
+    Rectangle{
+        id: progressContainer
+        width: page.width * 0.90
         visible: false
-        value: 0
         anchors.top: columnLayout.bottom
-        anchors.topMargin: 12
         anchors.horizontalCenter: parent.horizontalCenter
-        function enableView(){
-            progressBar.visible = true
+        anchors.topMargin: 12
+
+        function resetProgressContainer(){
+            progressBar.resetProgressBar()
+            progressContainer.visible = false
+        }
+
+        ProgressBar{
+            id: progressBar
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width * 0.85
+            anchors.top: parent.top
+            anchors.topMargin: 0
+            from: 0
+            to: 100
+            value: 0
+
+            function resetProgressBar(){
+                progressBar.value = 0
+            }
 
         }
 
-        function disableView(){
-            progressBar.visible = false
-            progressBar.value = 0
+        Label{
+            id: speedLabel
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: "0"
+            anchors.top: progressBar.bottom
+            anchors.topMargin: 4
         }
 
     }

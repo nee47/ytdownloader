@@ -1,3 +1,11 @@
 {
-    "files": ["main.py","main.qml","qml/EasyTab","qml/Mp3Tab.qml"]
+    "files": [
+        "qml/Mp3Tab.qml",
+        "main.qml",
+        "main.py",
+        "qml/GlobalVars.qml",
+        "qml/EasyTab",
+        "qml/qmldir",
+        "qml/DownloadButton.qml"
+    ]
 }

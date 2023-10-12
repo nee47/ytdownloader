@@ -1,6 +1,31 @@
-# ytdownloader
-easy youtube downloader
 
-Downloads video from youtube in the quality selected if the quality isn't available it will pick the best quality that available the codec will be no better than vp9 
+# YTdownloader
 
-![ytdownloader](https://lh3.googleusercontent.com/0RV5G-ZAeGD1RjDzQORRYpv7QbbZ3cqIdRhGl-Wjj7cHj3keFSPMWSA3612gZa2CBg1ZrRebwGPJCj9uk8TEV5FzLPAqzkRNgJsdY_O1j3rifunletku0-fNSjsH70FuXLZutta3jONBrl0wWaa7p99kQYJ779DgFcf0zVX0dcU8S6ddxAuGSA4g2hZt9rT2AkAq5jlbzy1sTP53q7Zqp7s6DeGT3DlYnLIUtnCx2rXkEvksn9AKoxuYO9tbF_QW0s4mmstlnD6S-fuPzROwyR3mlfZTWBhwbgIABr5bC1LOnclquphd2rKwxpvUG69Hf7-Jze57EtUFNJ0dtg1gyrxqgm4nvixY5PDI29gOUwHwU5J5r6pTsEBhIlXN0uDab3jyzl5w4_Vb9le8nnRkQMQ1zQgUFD0lE9zRmBKw7f8KCkrD_P4BRvRzScaGKranE_fDkHIDFq8r4sqJKClDF5OEL9HqqeeMMCdUTVlcQ6YDTVoUIdgzUUxT5hs3RGGTcKP_hBqs5jVWnSm10V2DW9vb8qdMNGmNkjmwwt0cfT9t0u4cf7FFyV97bFC4EuGc2lUlm_vcerQr5gWsnWNEv2I6BbGMP5Icf0sXgEf5mqDLHGVllWYKTUzYSzjP_vkkzbENrundvAFz7ftIaZcS8lQoZJe8VgqbBWaLZlNybIYIzwa2KazHzrTnPqPG1ZG6OgDb2b8vMxFCKViZwO5axFgunY8IhRgqqMEzU9ps4zaNIKY4lIbj8S1JSXaz7dd0IiBCJDboOT57mScuBYbZX9OtQu-9ifYn5ufMpmWnTpvZPcKz5r-gDTHTFjRm-vEiNigZiXR26Wn4_RqG3ua5ZNrGIU7V2uCTbx3ixzgCQ2wIg4lVUl6oWp3phJut7CQal4IHIw_Y0eG0islHjTFo6EeZ--WHo65OEFQJRJ8VpeYQ6QfH=w802-h638-no?authuser=0)
+Download videos in a simple way with a intuitive minimalistic gui.
+
+
+
+## Installation
+
+Create a virtual env (i did it with virtualenv)
+
+```bash
+  virtualenv env
+```
+
+```bash
+  cd env/scripts
+  activate
+```
+Install pyside6 and Yt-dlp modules
+```bash
+  pip install pyside6 
+```
+```bash
+  pip install yt-dlp 
+```
+
+
+## Requisites for post processing
+
+You need to download FFMPEG binaries and put the folder in the main directory of the project, then you should name it 'ffmpeg'.

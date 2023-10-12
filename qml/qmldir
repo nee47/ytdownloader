@@ -1,0 +1,3 @@
+module GlobalVars
+
+singleton GlobalVars 1.0 GlobalVars.qml
