@@ -10,32 +10,23 @@ Page{
         target: backend
 
         function onSignalDownloadFinished(boolValue){
-            resetComponents()
             GlobalVars.downloadStatus = "finished"
             return
         }
 
         // emited signal after pressing DOWNLOAD while downloading
         function onSignalCurrentProgress(current_numb, speed){
-            progressBar.value = current_numb
             speedLabel.text = speed
             return
         }
 
         // emited signal after pressing DOWNLOAD if something failed
         function onSignalErrorOcurred(message){
-            resetComponents()
             GlobalVars.downloadStatus = "error"
             errorDialog.errorMessage = message
             errorDialog.open()
         }
 
-    }
-
-    function resetComponents(){
-        downloadButton.enabled = true
-        progressContainer.resetProgressContainer()
-        return
     }
 
 
@@ -49,7 +40,7 @@ Page{
         property string ytUrl: textField.text
 
         function downloadH(){
-            progressContainer.visible = true
+            //progressContainer.visible = true
             backend.download(quality, ytUrl)
         }
 
@@ -138,6 +129,9 @@ Page{
         DownloadButton {
             id: downloadButton
             downloadHandler: columnLayout.downloadH
+            enabled: backend?.running?false:true
+
+
         }
 
         Button{
@@ -158,15 +152,10 @@ Page{
     Rectangle{
         id: progressContainer
         width: page.width * 0.90
-        visible: false
+        visible: backend?.running?true:false
         anchors.top: columnLayout.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 12
-
-        function resetProgressContainer(){
-            progressBar.resetProgressBar()
-            progressContainer.visible = false
-        }
 
         ProgressBar{
             id: progressBar
@@ -176,12 +165,7 @@ Page{
             anchors.topMargin: 0
             from: 0
             to: 100
-            value: 0
-
-            function resetProgressBar(){
-                progressBar.value = 0
-            }
-
+            value: backend?.progress?backend.progress:0
         }
 
         Label{

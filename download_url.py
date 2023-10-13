@@ -75,6 +75,19 @@ class EasyDownloader():
 			'postprocessors': [{'key': 'FFmpegVideoRemuxer', 'preferedformat': self.opts['ext']}]
 		}
 
+		ydl_audio_opts = {
+			'logger': MyLogger(),
+			'progress_hooks': [my_hook],
+			'ffmpeg_location': self.opts.get('ffmpeg_path'),
+			'final_ext': 'mp3',
+			'format': 'bestaudio/best',
+			'paths': {'home': self.opts['output_path']},
+			'postprocessors': [{'key': 'FFmpegExtractAudio',
+                     'nopostoverwrites': False,
+                     'preferredcodec': 'mp3',
+                     'preferredquality': '5'}]
+		}
+
 		with yt_dlp.YoutubeDL(ydl_opts) as ydl:
 			ydl.download(url)
 		

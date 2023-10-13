@@ -11,7 +11,7 @@ Button {
     property var downloadHandler
 
     onClicked:{
-        downloadButton.enabled = false
+        //downloadButton.enabled = false
         downloadHandler()
     }
 }
