@@ -26,8 +26,7 @@ class EasyDownloader():
 	def set_url(self, url):
 		self.url = url
 	
-	def download(self, url, currentProgressF=None):
-		
+	def download(self, url, progress,  currentProgressF=None):
 		if not url:
 			print("ERROR, NO LINK")
 			return
@@ -61,10 +60,40 @@ class EasyDownloader():
 			if d['status'] == 'finished':
 				print('Done downloading, now post-processing ...')
 			elif d['status'] == 'downloading':
-				if d.get('speed') and d.get("eta") and d.get('elapsed'):
+				# if d.get('speed') and d.get("eta") and d.get('elapsed'):
+				# 	speed_Mbps = round(d['speed'] * 0.000001)
+				# 	speed = f"elapsed time: {round(d['elapsed'])}s    estimated time: {round(d['eta'])}s   speed: {speed_Mbps} Mb/s"
+				# 	#currentProgressF(d['downloaded_bytes']/d['total_bytes'] * 100, speed)
+				# 	if d.get('total_bytes'):
+				# 		g = d['downloaded_bytes']/d['total_bytes'] * 100
+				# 		print(g)
+				# 		progress(g) 
+				# 	currentProgressF(speed)
+
+				di = {'elapsed': round(d['elapsed'], 1)}
+
+				if d.get('eta'):
+					#text += f"{round(d['eta'])}s"
+					di['eta'] = round(d['eta'])
+					
+
+
+				if d.get('speed'):
 					speed_Mbps = round(d['speed'] * 0.000001)
-					speed = f"elapsed time: {round(d['elapsed'])}s    estimated time: {round(d['eta'])}s   speed: {speed_Mbps} Mb/s"
-					currentProgressF(d['downloaded_bytes']/d['total_bytes'] * 100, speed)
+					di['speed'] = speed_Mbps
+
+				if d.get('total_bytes'):
+						g = d['downloaded_bytes']/d['total_bytes'] * 100
+						print(g)
+						di['current_progress'] = g
+						progress(g) 
+
+				# di = {
+				# 	'eta': round(d.get('elapsed')),
+				# 	'speed': round(d.get('speed') * 0.000001),
+				# 	'elapsed': round(d['elapsed'])
+				# }
+				currentProgressF(di)
 
 		ydl_opts = {
 			'logger': MyLogger(),

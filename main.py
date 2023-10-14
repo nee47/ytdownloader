@@ -24,7 +24,7 @@ class DownloaderBackend(QObject):
         self.downloader.set_output_path(path)
      
     signalDownloadFinished = Signal(bool)
-    signalCurrentProgress = Signal(int, str)
+    signalCurrentProgress = Signal(dict)
     def _downloadLogic2(self, resolution, url, currentProgressF):
         self.downloader.set_res(resolution)
         self.downloader.download(url, currentProgressF)
@@ -32,9 +32,10 @@ class DownloaderBackend(QObject):
 
     def _downloadLogic(self, resolution, url, currentProgressF):
         self.downloader.set_res(resolution)
-        for i in range(100):
+        def f(i):
             self.progress = i
-            time.sleep(0.04)
+
+        self.downloader.download(url, f, currentProgressF)
         self.running = False
         #self.downloader.download(url, currentProgressF)
         #self.signalDownloadFinished.emit(True)

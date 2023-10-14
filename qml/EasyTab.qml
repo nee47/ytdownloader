@@ -15,8 +15,23 @@ Page{
         }
 
         // emited signal after pressing DOWNLOAD while downloading
-        function onSignalCurrentProgress(current_numb, speed){
-            speedLabel.text = speed
+        function onSignalCurrentProgress(info){
+            //speedLabel.text = info
+            console.log(JSON.stringify(info))
+            let txtElapsed = "Elapsed Time: "
+            var txtSpeed =  "Speed: "
+            var txtEta = "Estimated Time: "
+            if (info.elapsed === GlobalVars.lastOne) return
+            else GlobalVars.lastOne = info.elapsed
+            //let elapsedTime = info.elapsed + ''
+            elapsedLabel.text = txtElapsed + info.elapsed +'s'
+
+            if(info.eta)
+                etaLabel.text = txtEta + info.eta + 's'
+
+            if(info.speed)
+                speedLabel.text = txtSpeed + info.speed + 'MB/s'
+
             return
         }
 
@@ -168,13 +183,31 @@ Page{
             value: backend?.progress?backend.progress:0
         }
 
-        Label{
-            id: speedLabel
+        RowLayout{
+            id: downloadInfoContainer
             anchors.horizontalCenter: parent.horizontalCenter
-            text: "0"
             anchors.top: progressBar.bottom
             anchors.topMargin: 4
+            spacing: 10
+
+            Label{
+                id: elapsedLabel
+                text: ""
+                width: 60
+            }
+            Label{
+                id: etaLabel
+                text: ""
+                width: 70
+            }
+            Label{
+                id: speedLabel
+                text: ""
+                width: 65
+            }
         }
+
+
 
     }
 }
