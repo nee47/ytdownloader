@@ -6,7 +6,6 @@ import yt_dlp
 class EasyDownloader():
 
 	def __init__(self):
-			self.ytdlp = "yt-dlp --newline "
 			self.opts = {'res': '', 'output_path': '', 'ffmpeg_path':'', 'ext':''}
 			self.url = None
 
@@ -26,7 +25,7 @@ class EasyDownloader():
 	def set_url(self, url):
 		self.url = url
 	
-	def download(self, url, progress,  currentProgressF=None):
+	def download(self, url, progress, currentProgressF=None, only_audio=False):
 		if not url:
 			print("ERROR, NO LINK")
 			return
@@ -46,7 +45,6 @@ class EasyDownloader():
 					#self.info(msg)
 					pass
 
-
 			def info(self, msg):
 				print(msg)
 
@@ -60,39 +58,22 @@ class EasyDownloader():
 			if d['status'] == 'finished':
 				print('Done downloading, now post-processing ...')
 			elif d['status'] == 'downloading':
-				# if d.get('speed') and d.get("eta") and d.get('elapsed'):
-				# 	speed_Mbps = round(d['speed'] * 0.000001)
-				# 	speed = f"elapsed time: {round(d['elapsed'])}s    estimated time: {round(d['eta'])}s   speed: {speed_Mbps} Mb/s"
-				# 	#currentProgressF(d['downloaded_bytes']/d['total_bytes'] * 100, speed)
-				# 	if d.get('total_bytes'):
-				# 		g = d['downloaded_bytes']/d['total_bytes'] * 100
-				# 		print(g)
-				# 		progress(g) 
-				# 	currentProgressF(speed)
 
 				di = {'elapsed': round(d['elapsed'], 1)}
 
 				if d.get('eta'):
 					#text += f"{round(d['eta'])}s"
 					di['eta'] = round(d['eta'])
-					
-
 
 				if d.get('speed'):
 					speed_Mbps = round(d['speed'] * 0.000001)
 					di['speed'] = speed_Mbps
 
 				if d.get('total_bytes'):
-						g = d['downloaded_bytes']/d['total_bytes'] * 100
-						print(g)
-						di['current_progress'] = g
-						progress(g) 
+						prog = d['downloaded_bytes']/d['total_bytes'] * 100
+						di['current_progress'] = prog 
+						progress(prog) 
 
-				# di = {
-				# 	'eta': round(d.get('elapsed')),
-				# 	'speed': round(d.get('speed') * 0.000001),
-				# 	'elapsed': round(d['elapsed'])
-				# }
 				currentProgressF(di)
 
 		ydl_opts = {
@@ -117,20 +98,23 @@ class EasyDownloader():
                      'preferredquality': '5'}]
 		}
 
-		with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+		chosen_opts = ydl_audio_opts if only_audio else ydl_opts
+
+		with yt_dlp.YoutubeDL(chosen_opts) as ydl:
 			ydl.download(url)
 		
 	# Needs rework, using ytdlp module now
 	def update_ytdlp(self):
-		lines = []
-		command = self.ytdlp+" -U"
-		process = subprocess.Popen(command, 
-				stdout=subprocess.PIPE, 
-				stderr=subprocess.STDOUT,
-				text=True)
-		while process.poll() is None:
-			line = process.stdout.readline()
-			if line != '' :
-				lines.append(line)
+		# lines = []
+		# command = self.ytdlp+" -U"
+		# process = subprocess.Popen(command, 
+		# 		stdout=subprocess.PIPE, 
+		# 		stderr=subprocess.STDOUT,
+		# 		text=True)
+		# while process.poll() is None:
+		# 	line = process.stdout.readline()
+		# 	if line != '' :
+		# 		lines.append(line)
 		
-		return lines
+		# return lines
+		pass

@@ -18,28 +18,29 @@ class DownloaderBackend(QObject):
     signalGetPath = Signal(bool)
 
     @Slot(str)
-    def getFolderPath(self, targetPath):
+    def setOutputPath(self, targetPath):
         self.signalGetPath.emit(True)
         path = targetPath[8:]
         self.downloader.set_output_path(path)
-     
+
     signalDownloadFinished = Signal(bool)
     signalCurrentProgress = Signal(dict)
-    def _downloadLogic2(self, resolution, url, currentProgressF):
-        self.downloader.set_res(resolution)
-        self.downloader.download(url, currentProgressF)
-        self.signalDownloadFinished.emit(True)
+    signalCurrentProgressAudio = Signal(dict)
+    # def _downloadLogic2(self, resolution, url, currentProgressF):
+    #     self.downloader.set_res(resolution)
+    #     self.downloader.download(url, currentProgressF)
+    #     self.signalDownloadFinished.emit(True)
 
-    def _downloadLogic(self, resolution, url, currentProgressF):
-        self.downloader.set_res(resolution)
+    def _downloadLogic(self, url, currentProgressF, only_audio=False, resolution=None):
+        if resolution:
+            self.downloader.set_res(resolution)
+        
         def f(i):
             self.progress = i
 
-        self.downloader.download(url, f, currentProgressF)
+        self.downloader.download(url, f, currentProgressF, only_audio)
+        self.progress = 0
         self.running = False
-        #self.downloader.download(url, currentProgressF)
-        #self.signalDownloadFinished.emit(True)
-        
 
     def validate_url(self, url):
         result = re.search(r"youtu.?be(.com)?/\w+", url)
@@ -60,14 +61,17 @@ class DownloaderBackend(QObject):
         self.on_running.emit()
 
     signalErrorOcurred = Signal(str)
-    @Slot(str, str)
-    def download(self, resolution, url):
+    @Slot(str, bool, dict)
+    def download(self, url, only_audio, opts):
         if(self.validate_url(url)):    
             if not self._running:
                 self.running = True
-            
-            d = threading.Thread(target=self._downloadLogic, args=(resolution, url, self.signalCurrentProgress.emit))
-            d.start()
+            task = None
+            if only_audio:
+                task = threading.Thread(target=self._downloadLogic, args=(url, self.signalCurrentProgressAudio.emit, True))      
+            else:
+                task = threading.Thread(target=self._downloadLogic, args=(url, self.signalCurrentProgress.emit, only_audio, opts.get('res'))) 
+            task.start()
         else:
             self.signalErrorOcurred.emit("invalid youtube link ")
     

@@ -15,9 +15,8 @@ Page{
         }
 
         // emited signal after pressing DOWNLOAD while downloading
+        // brings a js object with the keys "eta", "elapsed" and  "speed"
         function onSignalCurrentProgress(info){
-            //speedLabel.text = info
-            console.log(JSON.stringify(info))
             let txtElapsed = "Elapsed Time: "
             var txtSpeed =  "Speed: "
             var txtEta = "Estimated Time: "
@@ -56,7 +55,7 @@ Page{
 
         function downloadH(){
             //progressContainer.visible = true
-            backend.download(quality, ytUrl)
+            backend.download(ytUrl, quality)
         }
 
         spacing: 17
@@ -135,16 +134,19 @@ Page{
             FolderDialog{
                 id: openFile
                 onAccepted: {
-                    backend.getFolderPath(selectedFolder)
+                    backend.setOutputPath(selectedFolder)
                 }
             }
-
         }
 
         DownloadButton {
             id: downloadButton
-            downloadHandler: columnLayout.downloadH
+            //downloadHandler: columnLayout.downloadH
             enabled: backend?.running?false:true
+            onClicked: {
+                const opts = {"res":comboBox.currentText}
+                backend.download(textField.text, false, opts)
+            }
 
 
         }
@@ -206,8 +208,6 @@ Page{
                 width: 65
             }
         }
-
-
 
     }
 }
