@@ -1,4 +1,4 @@
-import sys, re
+import sys, re, json
 import threading
 from pathlib import Path
 from download_url import EasyDownloader
@@ -14,7 +14,7 @@ class DownloaderBackend(QObject):
         self.downloader = EasyDownloader()
         self._progress = 0
         self._running = False
-        
+    
     signalGetPath = Signal(bool)
 
     @Slot(str)
@@ -44,7 +44,7 @@ class DownloaderBackend(QObject):
 
     def validate_url(self, url):
         result = re.search(r"youtu.?be(.com)?/\w+", url)
-        return True if result else False
+        return bool(result)
 
     def _get_progress(self):
         return self._progress
@@ -86,11 +86,41 @@ class DownloaderBackend(QObject):
     progress = Property(float, _get_progress, _set_progress, notify=on_progress)
     running = Property(bool, _get_running, _set_running, notify=on_running)
 
+
+class LanguageManager(QObject):
+    def __init__(self):
+        QObject.__init__(self)
+        
+        self.choosen_lang = "en"
+        
+        with open('language.json', 'r') as archivo:
+            self.datos = json.load(archivo)
+
+        self.current_raw_lang = self.datos[self.choosen_lang]
+        #self.deault_language = self.datos[self.choosen_lang]
+        print(self.current_raw_lang)
+
+    def _get_lang(self):
+        return self.current_raw_lang
+    
+    def _set_lang(self, lang):
+        self.current_raw_lang = self.datos[lang]
+        self.on_language_change.emit()
+
+    @Slot(str)
+    def update_language(self, lang):    
+        self.current_lang = lang
+
+    on_language_change = Signal()
+    current_lang = Property(dict, _get_lang, _set_lang, notify=on_language_change)
+
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
     thebackend = DownloaderBackend()
+    language_manager= LanguageManager()
     engine.rootContext().setContextProperty("backend", thebackend)
+    engine.rootContext().setContextProperty("language_mana", language_manager)
     qml_file = Path(__file__).resolve().parent / "qml/main.qml"
     engine.load(qml_file)
     if not engine.rootObjects():

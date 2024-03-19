@@ -27,22 +27,55 @@ Window {
 
     }
 
+    Connections{
+        target: language_mana
+    }
+
     MenuBar {
         id: menuBar
+
+        ActionGroup {
+                id: langeActions
+        }
 
         Menu {
             font.pixelSize: 12
             title: qsTr("📄")
 
             Action {
-                text: qsTr("Actualizar YT-DLP")
+                id: act1
+                text: qsTr("en")
+                checkable: true
+                ActionGroup.group: langeActions
+                checked: true
                 onTriggered: {
                     console.log("ACTUALIZANDO")
                     backend.update()
+                    act1.checked = true
+                    language_mana.update_language("en")
+
+                }
+            }
+
+            Action {
+                id: act2
+                text: qsTr("es")
+                checkable: true
+                ActionGroup.group: langeActions
+                onTriggered: {
+                    console.log("ACTUALIZANDO")
+                    backend.update()
+                    act2.checked = true
+                    language_mana.update_language("es")
                 }
             }
             MenuSeparator { }
-            Action { text: qsTr("Salir") }
+            Action {
+                text: language_mana.current_lang.exit
+                onTriggered: {
+                    Qt.quit()
+                }
+            }
         }
         anchors.left: parent.left
         anchors.right: parent.right
@@ -73,7 +106,7 @@ Window {
         //currentIndex: tabsDisplayer.currentIndex
 
         TabButton{
-            text: qsTr("Easy mode")
+            text: language_mana.current_lang.tab1
         }
 
         TabButton{

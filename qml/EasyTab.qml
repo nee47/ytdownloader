@@ -8,7 +8,6 @@ Page{
 
     Connections{
         target: backend
-
         function onSignalDownloadFinished(boolValue){
             GlobalVars.downloadStatus = "finished"
             return
@@ -41,6 +40,10 @@ Page{
             errorDialog.open()
         }
 
+    }
+
+    Connections{
+        target: language_mana
     }
 
 
@@ -106,7 +109,7 @@ Page{
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Text {
                 id: text2
-                text: qsTr("Calidad")
+                text: language_mana.current_lang.quality
                 font.pixelSize: 15
                 color: "#eb4465"
                 horizontalAlignment: Text.AlignRight
@@ -123,7 +126,7 @@ Page{
             }
             Button {
                 id: buttonTargetPath
-                text: qsTr("Output Path")
+                text: language_mana.current_lang.target
                 Layout.preferredWidth: 143
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 Layout.preferredHeight: 47
@@ -148,19 +151,6 @@ Page{
                 backend.download(textField.text, false, opts)
             }
 
-
-        }
-
-        Button{
-            id: testButton
-            text: qsTr("testo")
-            Layout.preferredHeight: 54
-            Layout.preferredWidth: 217
-            onClicked: {
-                console.log(GlobalVars.textoField)
-
-            }
-            visible: false
 
         }
 

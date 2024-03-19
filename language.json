@@ -1,0 +1,17 @@
+{
+  "en": {
+    "tab1": "Easy Mode",
+    "exit": "Exit",
+    "quality": "Quality",
+    "target": "Output Path",
+    "download": "Download"
+  },
+
+  "es": {
+    "tab1": "Modo Facil",
+    "exit": "Salir",
+    "quality": "Calidad",
+    "target": "Carpeta de Destino",
+    "download": "Descargar"
+  }
+}
