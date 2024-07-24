@@ -14,7 +14,8 @@ class DownloaderBackend(QObject):
         self.downloader = EasyDownloader()
         self._progress = 0
         self._running = False
-    
+        self.user_config = {}
+        print(self.getConfig())    
     signalGetPath = Signal(bool)
 
     @Slot(str)
@@ -59,6 +60,15 @@ class DownloaderBackend(QObject):
     def _set_running(self, run):
         self._running = run
         self.on_running.emit()
+
+    def getConfig(self):
+        config_file = "config.json"
+
+        with open(config_file, 'r') as file:
+            config_data = json.load(file)
+            return config_data
+            
+
 
     signalErrorOcurred = Signal(str)
     @Slot(str, bool, dict)

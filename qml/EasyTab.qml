@@ -127,7 +127,7 @@ Page{
             Button {
                 id: buttonTargetPath
                 text: language_mana.current_lang.target
-                Layout.preferredWidth: 143
+                Layout.preferredWidth: 180
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 Layout.preferredHeight: 47
                 onClicked: {

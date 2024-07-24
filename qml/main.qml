@@ -15,6 +15,8 @@ Window {
     Material.theme: Material.Dark
     Material.accent: Material.Orange
 
+    onAfterRendering: ()=> console.log("finished  rendering")
+
     Connections{
         target: backend
 
